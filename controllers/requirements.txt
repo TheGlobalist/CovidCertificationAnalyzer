@@ -1,0 +1,7 @@
+sanic
+sanic_cors
+zlib
+pillow
+pyzbar
+base45
+cbor2

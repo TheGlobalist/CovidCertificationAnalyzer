@@ -1,0 +1,77 @@
+<html lang="en"><head><meta charset="UTF-8">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row col-12 d-flex justify-content-center">
+                <h2>Analizza il Green Pass!</h2>
+                    
+                
+            </div>
+            <br><br><br>
+            <div class="row col-12 d-flex justify-content-center">
+                <p align="center">Non hai un telefono che possa analizzare il Green Pass con VerificaC19?<br> Carica qui la foto del tuo Green Pass! <br> Ti diremo se è valido oppure no!</p>
+            </div>
+
+            <div class="row col-12 d-flex justify-content-center">
+
+                <input type="file" class="form-control" id="photoLoader" accept="image/*" capture/>
+
+            </div>
+
+            <br><br><br><br>
+            <div class="row col-12 d-flex justify-content-center">
+                <p id="greenPassStatus"></p>
+                <p id="subject"></p>
+                <br>
+                <p id="isGreenPassValid"></p>
+                <br>
+                <p id="doseInfo"></p>
+                
+
+            </div>
+        </div>
+    
+    </body>
+
+    <script type="text/javascript">
+    
+    $(document).ready(function() {
+
+        $("#photoLoader").change(function() {
+            debugger;
+            let prova = $('input[type="file"]');
+            let toSend = new FormData();
+            toSend.append('image', prova[0].files[0])
+            $.ajax({
+                type:"POST",
+                url: "/analyzer/greenPass/analysis/perform",
+                data: toSend,
+                enctype: 'multipart/form-data',
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,   // tell jQuery not to set contentType
+                success: function(res) {
+                    if (res['status'] === 200) {
+                        let data = res['data'];
+                        $("#subject").text(data['firstName'] + " " + data['lastName']);
+                        $("#doseInfo").text(data['doseNumber'] + "/" + data['expectedDosesToDo']);
+                    }
+                    return;
+                },
+                error: function(err) {
+                    window.location.reload();
+                }
+            })
+
+        });
+
+    });
+
+    </script>
+</html>
+
+
